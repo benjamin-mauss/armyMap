@@ -25,6 +25,10 @@
 <script setup>
 const auth = useUserAuth();
 
+if (!auth.isLoggedIn()) {
+  navigateTo({ path: "/login" });
+}
+
 const logout = () => {
   auth.logout();
   navigateTo({ path: "/login" });

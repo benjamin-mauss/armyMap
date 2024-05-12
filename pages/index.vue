@@ -387,23 +387,28 @@ const centralizarMapa = (longitude, latitude) => {
 };
 
 async function carregarMissoes() {
-  if (!auth.isLoggedIn()) {
-    navigateTo({ path: "/login" });
-    return;
-  }
-
   try {
-    const { data, pending, error, refresh } = await useFetch("/api/missoes", {
+    const { data, pending, error, refresh, status } = await useFetch("/api/missoes", {
       watch: false,
+      onResponseError({ request, response, options }) {
+        console.log("response", response);
+        if (response.status === 401 || response.status === 403) {
+          notify("Não foi possível carregar as missões.")
+          navigateTo({ path: "/login" });
+        }
+      }
     });
 
-    if (error.value) {
-      notify("Não foi possível carregar as missões.");
+    console.log("status", error);
+    if (status.value == 'error') {
+      notify("Não foi possível carregar as missões.")
+      // navigateTo({ path: "/login" });
       return;
     }
 
     missoes.value = data.value;
     
+    // Código para excluir todas as missões que tem id
     // data.value.forEach((item) => {
     //   // console.log(item.id);
     //   useFetch(`/api/missao/${item.id}`, { method: "delete", watch: false});
@@ -511,7 +516,7 @@ const resetForm = function () {
   }
 };
 
-await carregarMissoes();
+carregarMissoes();
 
 useHead({
   titleTemplate: () => "Localização das Tropas",
