@@ -188,12 +188,6 @@
           <v-row dense>
             <v-col cols="12" sm="12">
               <v-text-field
-                label="ID"
-                v-model="missao.id"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="12">
-              <v-text-field
                 label="Número do Pelotão"
                 v-model="missao.numero_pelotao"
               ></v-text-field>
