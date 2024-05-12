@@ -1,0 +1,16 @@
+## Temporary image only used to build server
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY . /app/
+RUN yarn install --frozen-lockfile
+RUN yarn build
+
+## Optimized image used as server
+FROM node:20-alpine AS server
+WORKDIR /app
+COPY --from=builder ./app/.output ./.output
+COPY package* ./app
+COPY yarn.lock ./app
+RUN yarn install --production
+EXPOSE 3000
+CMD ["node", ".output/server/index.mjs"] ⁠
